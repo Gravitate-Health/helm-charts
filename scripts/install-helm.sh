@@ -17,14 +17,14 @@ run_release() {
 
 if [[ "${PROFILE}" == "quickstart" || "${PROFILE}" == "core" ]]; then
   TARGET_NAMESPACE="${NAMESPACE:-default}"
-  run_release "istio-gravitatehealth" "../istio/charts/istio-gravitatehealth" "${TARGET_NAMESPACE}"
-  run_release "fhir-server-ips" "../fhir-ips/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
-  run_release "fhir-server-epi" "../fhir-epi/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
-  run_release "terminology-service" "../terminology-service/charts/terminology-service" "${TARGET_NAMESPACE}"
-  run_release "keycloak" "../keycloak/charts/keycloak" "${TARGET_NAMESPACE}"
-  run_release "keycloak-registration" "../keycloak-registration/charts/keycloak-registration" "${TARGET_NAMESPACE}"
-  run_release "fhir-connector" "../fhir-connector/charts/fhir-connector" "${TARGET_NAMESPACE}"
-  run_release "focusing-manager" "../focusing-manager/charts/focusing-manager" "${TARGET_NAMESPACE}"
+  run_release "istio-gravitatehealth" "oci://ghcr.io/gravitate-health/charts/istio-gravitatehealth" "${TARGET_NAMESPACE}"
+  run_release "fhir-server-ips" "oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
+  run_release "fhir-server-epi" "oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
+  run_release "terminology-service" "oci://ghcr.io/gravitate-health/charts/terminology-service" "${TARGET_NAMESPACE}"
+  run_release "keycloak" "oci://ghcr.io/gravitate-health/charts/keycloak" "${TARGET_NAMESPACE}"
+  run_release "keycloak-registration" "oci://ghcr.io/gravitate-health/charts/keycloak-registration" "${TARGET_NAMESPACE}"
+  run_release "fhir-connector" "oci://ghcr.io/gravitate-health/charts/fhir-connector" "${TARGET_NAMESPACE}"
+  run_release "focusing-manager" "oci://ghcr.io/gravitate-health/charts/focusing-manager" "${TARGET_NAMESPACE}"
 fi
 
 echo "Note: Helm fallback script currently supports the core profile path only."

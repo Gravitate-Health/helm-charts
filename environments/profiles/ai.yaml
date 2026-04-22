@@ -13,10 +13,8 @@ modules:
   preprocessingDictionary: true
   lensSelectorFhir: true
   lensSelectorGit: true
-  lensTemplateServicePython: true
   lensServiceSummary: true
   lensServicePlainLanguage: true
-  lensSelectorExample: true
   chatWithEpi: true
   chatbotInterface: true
   supportingMaterialManager: true

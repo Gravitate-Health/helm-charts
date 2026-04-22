@@ -18,14 +18,14 @@ function Install-Release {
 }
 
 if ($Profile -in @('quickstart', 'core')) {
-  Install-Release -Name 'istio-gravitatehealth' -Chart '../istio/charts/istio-gravitatehealth' -TargetNamespace $Namespace
-  Install-Release -Name 'fhir-server-ips' -Chart '../fhir-ips/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
-  Install-Release -Name 'fhir-server-epi' -Chart '../fhir-epi/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
-  Install-Release -Name 'terminology-service' -Chart '../terminology-service/charts/terminology-service' -TargetNamespace $Namespace
-  Install-Release -Name 'keycloak' -Chart '../keycloak/charts/keycloak' -TargetNamespace $Namespace
-  Install-Release -Name 'keycloak-registration' -Chart '../keycloak-registration/charts/keycloak-registration' -TargetNamespace $Namespace
-  Install-Release -Name 'fhir-connector' -Chart '../fhir-connector/charts/fhir-connector' -TargetNamespace $Namespace
-  Install-Release -Name 'focusing-manager' -Chart '../focusing-manager/charts/focusing-manager' -TargetNamespace $Namespace
+  Install-Release -Name 'istio-gravitatehealth' -Chart 'oci://ghcr.io/gravitate-health/charts/istio-gravitatehealth' -TargetNamespace $Namespace
+  Install-Release -Name 'fhir-server-ips' -Chart 'oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
+  Install-Release -Name 'fhir-server-epi' -Chart 'oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
+  Install-Release -Name 'terminology-service' -Chart 'oci://ghcr.io/gravitate-health/charts/terminology-service' -TargetNamespace $Namespace
+  Install-Release -Name 'keycloak' -Chart 'oci://ghcr.io/gravitate-health/charts/keycloak' -TargetNamespace $Namespace
+  Install-Release -Name 'keycloak-registration' -Chart 'oci://ghcr.io/gravitate-health/charts/keycloak-registration' -TargetNamespace $Namespace
+  Install-Release -Name 'fhir-connector' -Chart 'oci://ghcr.io/gravitate-health/charts/fhir-connector' -TargetNamespace $Namespace
+  Install-Release -Name 'focusing-manager' -Chart 'oci://ghcr.io/gravitate-health/charts/focusing-manager' -TargetNamespace $Namespace
 }
 
 Write-Host 'Plain Helm fallback currently supports the core profile path only.'

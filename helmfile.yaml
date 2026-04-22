@@ -40,7 +40,7 @@ environments:
 releases:
   - name: istio-gravitatehealth
     namespace: {{ .Values.global.namespace }}
-    chart: ../istio/charts/istio-gravitatehealth
+    chart: oci://ghcr.io/gravitate-health/charts/istio-gravitatehealth
     installed: {{ get .Values.modules "istio" true }}
     labels:
       phase: infra
@@ -50,7 +50,7 @@ releases:
 
   - name: fhir-server-ips
     namespace: {{ .Values.global.namespace }}
-    chart: ../fhir-ips/charts/hapi-fhir-jpaserver
+    chart: oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver
     installed: {{ get .Values.modules "fhirIps" true }}
     labels:
       phase: data
@@ -60,7 +60,7 @@ releases:
 
   - name: fhir-server-epi
     namespace: {{ .Values.global.namespace }}
-    chart: ../fhir-epi/charts/hapi-fhir-jpaserver
+    chart: oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver
     installed: {{ get .Values.modules "fhirEpi" true }}
     labels:
       phase: data
@@ -70,7 +70,7 @@ releases:
 
   - name: terminology-service
     namespace: {{ .Values.global.namespace }}
-    chart: ../terminology-service/charts/terminology-service
+    chart: oci://ghcr.io/gravitate-health/charts/terminology-service
     installed: {{ get .Values.modules "terminology" true }}
     labels:
       phase: data
@@ -80,7 +80,7 @@ releases:
 
   - name: keycloak
     namespace: {{ .Values.global.namespace }}
-    chart: ../keycloak/charts/keycloak
+    chart: oci://ghcr.io/gravitate-health/charts/keycloak
     installed: {{ get .Values.modules "keycloak" true }}
     labels:
       phase: iam
@@ -92,7 +92,7 @@ releases:
 
   - name: keycloak-registration
     namespace: {{ .Values.global.namespace }}
-    chart: ../keycloak-registration/charts/keycloak-registration
+    chart: oci://ghcr.io/gravitate-health/charts/keycloak-registration
     installed: {{ get .Values.modules "keycloakRegistration" true }}
     labels:
       phase: iam
@@ -105,7 +105,7 @@ releases:
 
   - name: fhir-connector
     namespace: {{ .Values.global.namespace }}
-    chart: ../fhir-connector/charts/fhir-connector
+    chart: oci://ghcr.io/gravitate-health/charts/fhir-connector
     installed: {{ get .Values.modules "fhirConnector" true }}
     labels:
       phase: core
@@ -118,7 +118,7 @@ releases:
 
   - name: focusing-manager
     namespace: {{ .Values.global.namespace }}
-    chart: ../focusing-manager/charts/focusing-manager
+    chart: oci://ghcr.io/gravitate-health/charts/focusing-manager
     installed: {{ get .Values.modules "focusingManager" true }}
     labels:
       phase: core
@@ -129,7 +129,7 @@ releases:
 
   - name: preprocessing-service-manual
     namespace: {{ .Values.global.namespace }}
-    chart: ../preprocessing-service-manual/charts/preprocessing-service-manual
+    chart: oci://ghcr.io/gravitate-health/charts/preprocessing-service-manual
     installed: {{ get .Values.modules "preprocessingManual" true }}
     labels:
       phase: extensions
@@ -139,7 +139,7 @@ releases:
 
   - name: preprocessing-service-terminology
     namespace: {{ .Values.global.namespace }}
-    chart: ../preprocessing-service-terminology/charts/preprocessing-service-terminology
+    chart: oci://ghcr.io/gravitate-health/charts/preprocessing-service-terminology
     installed: {{ get .Values.modules "preprocessingTerminology" true }}
     labels:
       phase: extensions
@@ -150,7 +150,7 @@ releases:
 
   - name: preprocessing-service-cleaner
     namespace: {{ .Values.global.namespace }}
-    chart: ../preprocessing-service-cleaner/charts/preprocessing-service-cleaner
+    chart: oci://ghcr.io/gravitate-health/charts/preprocessing-service-cleaner
     installed: {{ get .Values.modules "preprocessingCleaner" true }}
     labels:
       phase: extensions
@@ -160,7 +160,7 @@ releases:
 
   - name: preprocessing-service-dictionary
     namespace: {{ .Values.global.namespace }}
-    chart: ../preprocessing-service-dictionary/charts/preprocessing-service-dictionary
+    chart: oci://ghcr.io/gravitate-health/charts/preprocessing-service-dictionary
     installed: {{ get .Values.modules "preprocessingDictionary" true }}
     labels:
       phase: extensions
@@ -170,7 +170,7 @@ releases:
 
   - name: lens-selector-fhir
     namespace: {{ .Values.global.namespace }}
-    chart: ../lens-selector-fhir/charts/lens-selector-fhir
+    chart: oci://ghcr.io/gravitate-health/charts/lens-selector-fhir
     installed: {{ get .Values.modules "lensSelectorFhir" true }}
     labels:
       phase: extensions
@@ -181,7 +181,7 @@ releases:
 
   - name: lens-selector-git
     namespace: {{ .Values.global.namespace }}
-    chart: ../lens-selector-git/charts/lens-selector-git
+    chart: oci://ghcr.io/gravitate-health/charts/lens-selector-git
     installed: {{ get .Values.modules "lensSelectorGit" true }}
     labels:
       phase: extensions
@@ -189,19 +189,9 @@ releases:
     needs:
       - {{ .Values.global.namespace }}/focusing-manager
 
-  - name: lens-template-service-python
-    namespace: {{ .Values.global.namespace }}
-    chart: ../lens-template-service-python/charts/lens-template-service-python
-    installed: {{ get .Values.modules "lensTemplateServicePython" false }}
-    labels:
-      phase: ai
-      module: lens-template-service-python
-    needs:
-      - {{ .Values.global.namespace }}/focusing-manager
-
   - name: lens-service-summary
     namespace: {{ .Values.global.namespace }}
-    chart: ../lens-service-summary/charts/lens-service-summary
+    chart: oci://ghcr.io/gravitate-health/charts/lens-service-summary
     installed: {{ get .Values.modules "lensServiceSummary" false }}
     labels:
       phase: ai
@@ -211,7 +201,7 @@ releases:
 
   - name: lens-service-plain-language
     namespace: {{ .Values.global.namespace }}
-    chart: ../lens-service-plain-language/charts/lens-service-plain-language
+    chart: oci://ghcr.io/gravitate-health/charts/lens-service-plain-language
     installed: {{ get .Values.modules "lensServicePlainLanguage" false }}
     labels:
       phase: ai
@@ -219,19 +209,9 @@ releases:
     needs:
       - {{ .Values.global.namespace }}/focusing-manager
 
-  - name: lens-selector-example
-    namespace: {{ .Values.global.namespace }}
-    chart: ../lens-template-selector/charts/lens-selector-example
-    installed: {{ get .Values.modules "lensSelectorExample" false }}
-    labels:
-      phase: ai
-      module: lens-selector-example
-    needs:
-      - {{ .Values.global.namespace }}/focusing-manager
-
   - name: chat-with-epi
     namespace: {{ .Values.global.namespace }}
-    chart: ../chat-with-epi/charts/chat-with-epi
+    chart: oci://ghcr.io/gravitate-health/charts/chat-with-epi
     installed: {{ get .Values.modules "chatWithEpi" false }}
     labels:
       phase: ai
@@ -242,7 +222,7 @@ releases:
 
   - name: chatbot-interface
     namespace: {{ .Values.global.namespace }}
-    chart: ../chatbot-interface/charts/chatbot-interface
+    chart: oci://ghcr.io/gravitate-health/charts/chatbot-interface
     installed: {{ get .Values.modules "chatbotInterface" false }}
     labels:
       phase: ai
@@ -253,7 +233,7 @@ releases:
 
   - name: supporting-material-manager
     namespace: {{ .Values.global.namespace }}
-    chart: ../supporting-material-manager/charts/supporting-material-manager
+    chart: oci://ghcr.io/gravitate-health/charts/supporting-material-manager
     installed: {{ get .Values.modules "supportingMaterialManager" false }}
     labels:
       phase: apps
@@ -265,7 +245,7 @@ releases:
 
   - name: provenance-engine
     namespace: {{ .Values.global.namespace }}
-    chart: ../provenance-engine/charts/provenance-engine
+    chart: oci://ghcr.io/gravitate-health/charts/provenance-engine
     installed: {{ get .Values.modules "provenanceEngine" false }}
     labels:
       phase: apps
@@ -273,7 +253,7 @@ releases:
 
   - name: focusing-inspector
     namespace: {{ .Values.global.namespace }}
-    chart: ../focusing-inspector/charts/focusing-inspector
+    chart: oci://ghcr.io/gravitate-health/charts/focusing-inspector
     installed: {{ get .Values.modules "focusingInspector" false }}
     labels:
       phase: observability
@@ -283,7 +263,7 @@ releases:
 
   - name: gh-monit
     namespace: {{ .Values.global.namespace }}
-    chart: ../gh-monit/charts/gh-monit
+    chart: oci://ghcr.io/gravitate-health/charts/gh-monit
     installed: {{ get .Values.modules "ghMonit" false }}
     labels:
       phase: observability
@@ -291,7 +271,7 @@ releases:
 
   - name: monitor-routing
     namespace: {{ .Values.global.monitoringNamespace }}
-    chart: ../Monitor/helm/charts/monitor-routing
+    chart: oci://ghcr.io/gravitate-health/charts/monitor-routing
     installed: {{ get .Values.modules "monitoringStack" false }}
     labels:
       phase: observability

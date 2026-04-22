@@ -1,0 +1,4 @@
+cronjobs:
+  smmTool:
+    env:
+      OBJECT_STORAGE_URL: {{ printf "https://%s/smm" .Values.global.host | quote }}

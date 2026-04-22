@@ -1,0 +1,3 @@
+global:
+  # Quick start contract: this is the only setting operators should need to change.
+  host: fosps.gravitatehealth.eu

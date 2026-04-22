@@ -1,0 +1,4 @@
+virtualService:
+  hosts:
+    - "*"
+  gateway: {{ printf "%s/%s" .Values.global.namespace .Values.global.gatewayName | quote }}

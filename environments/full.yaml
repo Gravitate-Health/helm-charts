@@ -1,0 +1,33 @@
+global:
+  host: fosps.gravitatehealth.eu
+  namespace: default
+  monitoringNamespace: monitoring
+
+modules:
+  # Keep all modules enabled by default for full environment.
+  # You can disable any module with --state-values-set modules.<key>=false
+  istio: true
+  fhirIps: true
+  fhirEpi: true
+  terminology: true
+  keycloak: true
+  keycloakRegistration: true
+  fhirConnector: true
+  focusingManager: true
+  preprocessingManual: true
+  preprocessingTerminology: true
+  preprocessingCleaner: true
+  preprocessingDictionary: true
+  lensSelectorFhir: true
+  lensSelectorGit: true
+  lensTemplateServicePython: true
+  lensServiceSummary: true
+  lensServicePlainLanguage: true
+  lensSelectorExample: true
+  chatWithEpi: true
+  chatbotInterface: true
+  supportingMaterialManager: true
+  provenanceEngine: true
+  focusingInspector: true
+  ghMonit: true
+  monitoringStack: true

@@ -1,0 +1,5 @@
+global:
+  host: fosps.gravitatehealth.eu
+  namespace: default
+  monitoringNamespace: monitoring
+  gatewayName: gh-gateway

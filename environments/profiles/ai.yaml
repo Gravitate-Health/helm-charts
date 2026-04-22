@@ -1,0 +1,26 @@
+modules:
+  istio: true
+  fhirIps: true
+  fhirEpi: true
+  terminology: true
+  keycloak: true
+  keycloakRegistration: true
+  fhirConnector: true
+  focusingManager: true
+  preprocessingManual: true
+  preprocessingTerminology: true
+  preprocessingCleaner: true
+  preprocessingDictionary: true
+  lensSelectorFhir: true
+  lensSelectorGit: true
+  lensTemplateServicePython: true
+  lensServiceSummary: true
+  lensServicePlainLanguage: true
+  lensSelectorExample: true
+  chatWithEpi: true
+  chatbotInterface: true
+  supportingMaterialManager: true
+  provenanceEngine: true
+  focusingInspector: false
+  ghMonit: false
+  monitoringStack: false

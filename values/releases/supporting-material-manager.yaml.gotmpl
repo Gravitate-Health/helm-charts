@@ -1,0 +1,8 @@
+minio:
+  env:
+    domain: {{ .Values.global.host | quote }}
+    browserRedirectUrl: {{ printf "https://%s/bucket/" .Values.global.host | quote }}
+
+config:
+  FHIR_URL: {{ printf "https://%s/epi/api/fhir" .Values.global.host | quote }}
+  API_URL: {{ printf "https://%s/bucket" .Values.global.host | quote }}

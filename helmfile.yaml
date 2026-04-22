@@ -1,0 +1,352 @@
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+helmDefaults:
+  createNamespace: true
+  wait: true
+  timeout: 900
+  dependencyUpdate: true
+
+environments:
+  quickstart:
+    values:
+      - environments/defaults.yaml
+      - environments/quickstart.yaml
+      - environments/profiles/core.yaml
+  quickstart-ai:
+    values:
+      - environments/defaults.yaml
+      - environments/quickstart.yaml
+      - environments/profiles/ai.yaml
+  quickstart-observability:
+    values:
+      - environments/defaults.yaml
+      - environments/quickstart.yaml
+      - environments/profiles/observability.yaml
+  quickstart-all:
+    values:
+      - environments/defaults.yaml
+      - environments/quickstart.yaml
+      - environments/profiles/all.yaml
+  full:
+    values:
+      - environments/defaults.yaml
+      - environments/full.yaml
+      - environments/profiles/all.yaml
+
+releases:
+  - name: istio-gravitatehealth
+    namespace: {{ .Values.global.namespace }}
+    chart: ../istio/charts/istio-gravitatehealth
+    installed: {{ get .Values.modules "istio" true }}
+    labels:
+      phase: infra
+      module: istio
+    values:
+      - values/releases/istio.yaml.gotmpl
+
+  - name: fhir-server-ips
+    namespace: {{ .Values.global.namespace }}
+    chart: ../fhir-ips/charts/hapi-fhir-jpaserver
+    installed: {{ get .Values.modules "fhirIps" true }}
+    labels:
+      phase: data
+      module: fhir-ips
+    needs:
+      - {{ .Values.global.namespace }}/istio-gravitatehealth
+
+  - name: fhir-server-epi
+    namespace: {{ .Values.global.namespace }}
+    chart: ../fhir-epi/charts/hapi-fhir-jpaserver
+    installed: {{ get .Values.modules "fhirEpi" true }}
+    labels:
+      phase: data
+      module: fhir-epi
+    needs:
+      - {{ .Values.global.namespace }}/istio-gravitatehealth
+
+  - name: terminology-service
+    namespace: {{ .Values.global.namespace }}
+    chart: ../terminology-service/charts/terminology-service
+    installed: {{ get .Values.modules "terminology" true }}
+    labels:
+      phase: data
+      module: terminology-service
+    needs:
+      - {{ .Values.global.namespace }}/istio-gravitatehealth
+
+  - name: keycloak
+    namespace: {{ .Values.global.namespace }}
+    chart: ../keycloak/charts/keycloak
+    installed: {{ get .Values.modules "keycloak" true }}
+    labels:
+      phase: iam
+      module: keycloak
+    values:
+      - values/releases/keycloak.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/istio-gravitatehealth
+
+  - name: keycloak-registration
+    namespace: {{ .Values.global.namespace }}
+    chart: ../keycloak-registration/charts/keycloak-registration
+    installed: {{ get .Values.modules "keycloakRegistration" true }}
+    labels:
+      phase: iam
+      module: keycloak-registration
+    values:
+      - values/releases/keycloak-registration.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/keycloak
+      - {{ .Values.global.namespace }}/fhir-server-ips
+
+  - name: fhir-connector
+    namespace: {{ .Values.global.namespace }}
+    chart: ../fhir-connector/charts/fhir-connector
+    installed: {{ get .Values.modules "fhirConnector" true }}
+    labels:
+      phase: core
+      module: fhir-connector
+    values:
+      - values/releases/fhir-connector.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/fhir-server-ips
+      - {{ .Values.global.namespace }}/fhir-server-epi
+
+  - name: focusing-manager
+    namespace: {{ .Values.global.namespace }}
+    chart: ../focusing-manager/charts/focusing-manager
+    installed: {{ get .Values.modules "focusingManager" true }}
+    labels:
+      phase: core
+      module: focusing-manager
+    needs:
+      - {{ .Values.global.namespace }}/fhir-server-ips
+      - {{ .Values.global.namespace }}/fhir-server-epi
+
+  - name: preprocessing-service-manual
+    namespace: {{ .Values.global.namespace }}
+    chart: ../preprocessing-service-manual/charts/preprocessing-service-manual
+    installed: {{ get .Values.modules "preprocessingManual" true }}
+    labels:
+      phase: extensions
+      module: preprocessing-service-manual
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: preprocessing-service-terminology
+    namespace: {{ .Values.global.namespace }}
+    chart: ../preprocessing-service-terminology/charts/preprocessing-service-terminology
+    installed: {{ get .Values.modules "preprocessingTerminology" true }}
+    labels:
+      phase: extensions
+      module: preprocessing-service-terminology
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+      - {{ .Values.global.namespace }}/terminology-service
+
+  - name: preprocessing-service-cleaner
+    namespace: {{ .Values.global.namespace }}
+    chart: ../preprocessing-service-cleaner/charts/preprocessing-service-cleaner
+    installed: {{ get .Values.modules "preprocessingCleaner" true }}
+    labels:
+      phase: extensions
+      module: preprocessing-service-cleaner
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: preprocessing-service-dictionary
+    namespace: {{ .Values.global.namespace }}
+    chart: ../preprocessing-service-dictionary/charts/preprocessing-service-dictionary
+    installed: {{ get .Values.modules "preprocessingDictionary" true }}
+    labels:
+      phase: extensions
+      module: preprocessing-service-dictionary
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: lens-selector-fhir
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-selector-fhir/charts/lens-selector-fhir
+    installed: {{ get .Values.modules "lensSelectorFhir" true }}
+    labels:
+      phase: extensions
+      module: lens-selector-fhir
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+      - {{ .Values.global.namespace }}/fhir-server-epi
+
+  - name: lens-selector-git
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-selector-git/charts/lens-selector-git
+    installed: {{ get .Values.modules "lensSelectorGit" true }}
+    labels:
+      phase: extensions
+      module: lens-selector-git
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: lens-template-service-python
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-template-service-python/charts/lens-template-service-python
+    installed: {{ get .Values.modules "lensTemplateServicePython" false }}
+    labels:
+      phase: ai
+      module: lens-template-service-python
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: lens-service-summary
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-service-summary/charts/lens-service-summary
+    installed: {{ get .Values.modules "lensServiceSummary" false }}
+    labels:
+      phase: ai
+      module: lens-service-summary
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: lens-service-plain-language
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-service-plain-language/charts/lens-service-plain-language
+    installed: {{ get .Values.modules "lensServicePlainLanguage" false }}
+    labels:
+      phase: ai
+      module: lens-service-plain-language
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: lens-selector-example
+    namespace: {{ .Values.global.namespace }}
+    chart: ../lens-template-selector/charts/lens-selector-example
+    installed: {{ get .Values.modules "lensSelectorExample" false }}
+    labels:
+      phase: ai
+      module: lens-selector-example
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: chat-with-epi
+    namespace: {{ .Values.global.namespace }}
+    chart: ../chat-with-epi/charts/chat-with-epi
+    installed: {{ get .Values.modules "chatWithEpi" false }}
+    labels:
+      phase: ai
+      module: chat-with-epi
+    needs:
+      - {{ .Values.global.namespace }}/fhir-server-epi
+      - {{ .Values.global.namespace }}/fhir-server-ips
+
+  - name: chatbot-interface
+    namespace: {{ .Values.global.namespace }}
+    chart: ../chatbot-interface/charts/chatbot-interface
+    installed: {{ get .Values.modules "chatbotInterface" false }}
+    labels:
+      phase: ai
+      module: chatbot-interface
+    needs:
+      - {{ .Values.global.namespace }}/chat-with-epi
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: supporting-material-manager
+    namespace: {{ .Values.global.namespace }}
+    chart: ../supporting-material-manager/charts/supporting-material-manager
+    installed: {{ get .Values.modules "supportingMaterialManager" false }}
+    labels:
+      phase: apps
+      module: supporting-material-manager
+    values:
+      - values/releases/supporting-material-manager.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/fhir-server-epi
+
+  - name: provenance-engine
+    namespace: {{ .Values.global.namespace }}
+    chart: ../provenance-engine/charts/provenance-engine
+    installed: {{ get .Values.modules "provenanceEngine" false }}
+    labels:
+      phase: apps
+      module: provenance-engine
+
+  - name: focusing-inspector
+    namespace: {{ .Values.global.namespace }}
+    chart: ../focusing-inspector/charts/focusing-inspector
+    installed: {{ get .Values.modules "focusingInspector" false }}
+    labels:
+      phase: observability
+      module: focusing-inspector
+    needs:
+      - {{ .Values.global.namespace }}/focusing-manager
+
+  - name: gh-monit
+    namespace: {{ .Values.global.namespace }}
+    chart: ../gh-monit/charts/gh-monit
+    installed: {{ get .Values.modules "ghMonit" false }}
+    labels:
+      phase: observability
+      module: gh-monit
+
+  - name: monitor-routing
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: ../Monitor/helm/charts/monitor-routing
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: monitor-routing
+    values:
+      - values/releases/monitor-routing.yaml.gotmpl
+    needs:
+      - {{ .Values.global.namespace }}/istio-gravitatehealth
+
+  - name: prometheus
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: prometheus-community/prometheus
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: prometheus
+    values:
+      - ../Monitor/helm/values/prometheus.yaml.gotmpl
+
+  - name: loki
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: grafana/loki
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: loki
+    values:
+      - ../Monitor/helm/values/loki.yaml
+
+  - name: promtail
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: grafana/promtail
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: promtail
+    values:
+      - ../Monitor/helm/values/promtail.yaml
+
+  - name: prometheus-blackbox-exporter
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: prometheus-community/prometheus-blackbox-exporter
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: prometheus-blackbox-exporter
+    values:
+      - ../Monitor/helm/values/blackbox-exporter.yaml
+
+  - name: grafana
+    namespace: {{ .Values.global.monitoringNamespace }}
+    chart: grafana/grafana
+    installed: {{ get .Values.modules "monitoringStack" false }}
+    labels:
+      phase: observability
+      module: grafana
+    values:
+      - ../Monitor/helm/values/grafana.yaml.gotmpl

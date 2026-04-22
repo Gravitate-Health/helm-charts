@@ -1,0 +1,15 @@
+gateway:
+  hosts:
+    - {{ .Values.global.host | quote }}
+
+certManager:
+  certificate:
+    commonName: {{ .Values.global.host | quote }}
+    dnsNames:
+      - {{ .Values.global.host | quote }}
+
+authentication:
+  jwtRules:
+    - issuer: {{ printf "https://%s/auth/realms/GravitateHealth" .Values.global.host | quote }}
+      jwksUri: {{ printf "https://%s/auth/realms/GravitateHealth/protocol/openid-connect/certs" .Values.global.host | quote }}
+      forwardOriginalToken: true

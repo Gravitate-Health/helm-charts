@@ -1,0 +1,11 @@
+networking:
+  ingress:
+    hosts:
+      - host: {{ .Values.global.host | quote }}
+        paths:
+          - path: /auth
+            pathType: Prefix
+
+config:
+  frontendUrl: {{ printf "https://%s/auth" .Values.global.host | quote }}
+  hostname: {{ .Values.global.host | quote }}

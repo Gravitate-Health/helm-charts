@@ -18,8 +18,8 @@ run_release() {
 if [[ "${PROFILE}" == "quickstart" || "${PROFILE}" == "core" ]]; then
   TARGET_NAMESPACE="${NAMESPACE:-default}"
   run_release "istio-gravitatehealth" "oci://ghcr.io/gravitate-health/charts/istio-gravitatehealth" "${TARGET_NAMESPACE}"
-  run_release "fhir-server-ips" "oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
-  run_release "fhir-server-epi" "oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver" "${TARGET_NAMESPACE}"
+  run_release "fhir-server-ips" "oci://ghcr.io/gravitate-health/charts/fhir-ips" "${TARGET_NAMESPACE}"
+  run_release "fhir-server-epi" "oci://ghcr.io/gravitate-health/charts/fhir-epi" "${TARGET_NAMESPACE}"
   run_release "terminology-service" "oci://ghcr.io/gravitate-health/charts/terminology-service" "${TARGET_NAMESPACE}"
   run_release "keycloak" "oci://ghcr.io/gravitate-health/charts/keycloak" "${TARGET_NAMESPACE}"
   run_release "keycloak-registration" "oci://ghcr.io/gravitate-health/charts/keycloak-registration" "${TARGET_NAMESPACE}"

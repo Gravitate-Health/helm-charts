@@ -19,8 +19,8 @@ function Install-Release {
 
 if ($Profile -in @('quickstart', 'core')) {
   Install-Release -Name 'istio-gravitatehealth' -Chart 'oci://ghcr.io/gravitate-health/charts/istio-gravitatehealth' -TargetNamespace $Namespace
-  Install-Release -Name 'fhir-server-ips' -Chart 'oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
-  Install-Release -Name 'fhir-server-epi' -Chart 'oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver' -TargetNamespace $Namespace
+  Install-Release -Name 'fhir-server-ips' -Chart 'oci://ghcr.io/gravitate-health/charts/fhir-ips' -TargetNamespace $Namespace
+  Install-Release -Name 'fhir-server-epi' -Chart 'oci://ghcr.io/gravitate-health/charts/fhir-epi' -TargetNamespace $Namespace
   Install-Release -Name 'terminology-service' -Chart 'oci://ghcr.io/gravitate-health/charts/terminology-service' -TargetNamespace $Namespace
   Install-Release -Name 'keycloak' -Chart 'oci://ghcr.io/gravitate-health/charts/keycloak' -TargetNamespace $Namespace
   Install-Release -Name 'keycloak-registration' -Chart 'oci://ghcr.io/gravitate-health/charts/keycloak-registration' -TargetNamespace $Namespace

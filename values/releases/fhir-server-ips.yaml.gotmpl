@@ -1,0 +1,19 @@
+# Values overlay for the fhir-server-ips helmfile release.
+# Release name in helmfile is "fhir-server-ips", so the bundled PostgreSQL
+# service will be "fhir-server-ips-postgresql".
+#
+# The DB credentials secret (fhir-server-ips-postgresql) is auto-generated
+# by the chart on first install and preserved across upgrades via Helm lookup.
+
+virtualService:
+  gateway: {{ .Values.global.gatewayName | default "gh-gateway" | quote }}
+
+hapi:
+  externalDatabase:
+    host: "fhir-server-ips-postgresql"
+    existingSecret: "fhir-server-ips-postgresql"
+    existingSecretKey: "password"
+
+postgresql:
+  auth:
+    existingSecret: "fhir-server-ips-postgresql"

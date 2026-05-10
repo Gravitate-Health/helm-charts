@@ -51,21 +51,25 @@ releases:
 
   - name: fhir-server-ips
     namespace: {{ .Values.global.namespace }}
-    chart: oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver
+    chart: oci://ghcr.io/gravitate-health/charts/fhir-ips
     installed: {{ if .Values.modules }}{{ .Values.modules.fhirIps | default true }}{{ else }}true{{ end }}
     labels:
       phase: data
       module: fhir-ips
+    values:
+      - values/releases/fhir-server-ips.yaml.gotmpl
     needs:
       - {{ .Values.global.namespace }}/istio-gravitatehealth
 
   - name: fhir-server-epi
     namespace: {{ .Values.global.namespace }}
-    chart: oci://ghcr.io/gravitate-health/charts/hapi-fhir-jpaserver
+    chart: oci://ghcr.io/gravitate-health/charts/fhir-epi
     installed: {{ if .Values.modules }}{{ .Values.modules.fhirEpi | default true }}{{ else }}true{{ end }}
     labels:
       phase: data
       module: fhir-epi
+    values:
+      - values/releases/fhir-server-epi.yaml.gotmpl
     needs:
       - {{ .Values.global.namespace }}/istio-gravitatehealth
 
